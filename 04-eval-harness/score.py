@@ -11,6 +11,7 @@ PRICE_OUT = 0.50 #Dollars per million output tokens
 
 gold = {}
 results = {}
+scores = []
 
 with GOLD_FILE.open("r", newline="", encoding="utf-8") as file:
     reader = csv.DictReader(file)
@@ -55,4 +56,32 @@ def score_image(path, gold, results):
             "normalized":normalized
             }
 
-print(score_image("office/office_05.jpg", gold, results))
+strict_count = 0
+normalized_count = 0
+format_violation_count = 0
+missing_count = 0
+
+for ip in gold:
+    score = score_image(ip, gold, results)
+    correct = score["correct"]
+    strict_ok = score["strict_ok"]
+    missing = score["missing"]
+    if correct and strict_ok:
+        strict_count+=1
+    if correct:
+        normalized_count+=1
+    if correct and not strict_ok:
+        format_violation_count+=1
+    if missing:
+        missing_count+=1
+    scores.append(score)
+
+score_count = len(scores)
+
+print(f"Strict:{strict_count}/{score_count} ({strict_count/score_count:.1%})")
+
+print(f"Normalized:{normalized_count}/{score_count} ({normalized_count/score_count:.1%})")
+
+print(f"Format Violations:{format_violation_count}/{score_count} ({format_violation_count/score_count:.1%})")
+
+print(f"Missing:{missing_count}/{score_count} ({missing_count/score_count:.1%})")
