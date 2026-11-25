@@ -10,7 +10,7 @@ client = anthropic.Anthropic()
 model_name = "claude-haiku-5-5"
 prompt = "What kind of place is this? Answer with exactly one word from: gym, bedroom, kitchen, beach, office."
 
-results_dir = Path("results.dir")
+results_dir = Path("results")
 results_dir.mkdir(exist_ok=True)
 model_path = results_dir/f"{model_name}.csv"
 
